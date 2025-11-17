@@ -67,21 +67,8 @@
         <input type="number" id="custoFixo" min="0" value="45" step="0.01">
       </div>
 
-      <div>
-        <<!-- Campo removido porque agora o sinal é automático -->
-
       <div class="full">
-        <label>Parcelamento (nº de parcelas)</label>
-      <select id="parcelas">
-        <option value="1">À vista (1x)</option>
-        <option value="2">2x</option>
-        <option value="3">3x</option>
-        <option value="4">4x</option>
-        <option value="5">5x</option>
-        <option value="6">6x</option>
-      </select>
-
-      <label>Observação (opcional)</label>
+        <label>Observação (opcional)</label>
         <input id="obs" placeholder="Ex: desconto para clientes VIP, acréscimo por cor extra...">
       </div>
 
@@ -93,12 +80,6 @@
         <!-- resultados aparecem aqui -->
       </div>
     </div>
-
-    <p class="note">Como funciona (padrões escolhidos):<br>
-    • O cálculo usa média linear do tamanho: (comprimento + largura) / 2 como referência em cm — isso mantém compatibilidade com preços por cm tradicionais.<br>
-    • Preço por tamanho = custo fixo + (tamanho_equivalente × preço_por_cm).<br>
-    • Multiplica pelo fator do local do corpo e adiciona taxa fixa por nível de detalhes.<br>
-    • Você pode personalizar multiplicadores e taxas como quiser.</p>
   </div>
 
   <script>
@@ -130,10 +111,7 @@
       const precoComLocal = precoPorTamanho * multLocal;
 
       // preço final adicionando nível de detalhes
-      // calcular sinal automático de 30%
-      const precoAntesDoSinal = precoComLocal + taxaDetalhe;
-      const sinal = precoAntesDoSinal * 0.30;
-      const precoFinal = precoAntesDoSinal - sinal = (precoComLocal + taxaDetalhe) - sinal;
+      const precoFinal = precoComLocal + taxaDetalhe;
 
       // breakdown para exibição
       const breakdown = [];
@@ -146,9 +124,6 @@
       breakdown.push(['Multiplicador local do corpo', multLocal]);
       breakdown.push(['Preço após local do corpo', 'R$ ' + formatBR(precoComLocal)]);
       breakdown.push(['Taxa nível de detalhes', 'R$ ' + formatBR(taxaDetalhe)]);
-      breakdown.push(['Subtotal antes do sinal', 'R$ ' + formatBR(precoAntesDoSinal)]);
-      breakdown.push(['Sinal (30%)', 'R$ ' + formatBR(sinal)]);
-      breakdown.push(['Valor restante após a tattoo', 'R$ ' + formatBR(precoFinal)], 'R$ ' + formatBR(precoFinal)]);
       breakdown.push(['TOTAL (orçamento)', 'R$ ' + formatBR(precoFinal)]);
 
       // montar HTML
