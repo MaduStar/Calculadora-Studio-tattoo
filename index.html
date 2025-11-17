@@ -5,92 +5,159 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora de Tatuagem - Studio</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0d0d0d;
-      color: #f2f2f2;
-      padding: 20px;
-    }
-    .container {
-      max-width: 400px;
-      margin: auto;
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-size: 14px;
-    }
-    select, input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #8b0000;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .resultado {
-      margin-top: 20px;
-      font-size: 18px;
-      text-align: center;
-      padding: 10px;
-      background: #111;
-      border-radius: 8px;
-    }
+    :root{--bg:#0b0b0b;--panel:#141414;--accent:#8b0000;--muted:#bfbfbf}
+    body {font-family: Inter, Arial, sans-serif; background: var(--bg); color: #f2f2f2; padding: 20px;}
+    .container {max-width:760px; margin:auto; background: linear-gradient(180deg,#0f0f0f, #111); padding:20px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    h2{text-align:center;margin-bottom:8px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    input, select{width:100%;padding:10px;border-radius:8px;border:none;background:var(--panel);color:#fff}
+    .full{grid-column:1/-1}
+    button{width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+    .result{margin-top:14px;padding:14px;border-radius:10px;background:#090909;border:1px solid rgba(255,255,255,0.03)}
+    .row{display:flex;justify-content:space-between;margin:6px 0}
+    .small{font-size:13px;color:var(--muted)}
+    .note{font-size:12px;color:var(--muted);margin-top:8px}
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Calculadora de Tatuagem</h2>
+    <h2>Calculadora Personalizada - Studio</h2>
+    <p class="small">Preencha comprimento e largura (em cm). A calculadora devolve preço por tamanho, ajuste por local do corpo, nível de detalhes e orçamento total.</p>
 
-    <label for="tamanho">Tamanho (cm):</label>
-    <input type="number" id="tamanho" min="1" max="100" placeholder="Ex: 7" />
+    <div class="grid" style="margin-top:10px">
+      <div>
+        <label>Comprimento (cm)</label>
+        <input type="number" id="comprimento" min="0.5" step="0.1" value="7">
+      </div>
+      <div>
+        <label>Largura (cm)</label>
+        <input type="number" id="largura" min="0.5" step="0.1" value="5">
+      </div>
 
-    <label for="complexidade">Complexidade:</label>
-    <select id="complexidade">
-      <option value="10">Simples (R$ 10/cm)</option>
-      <option value="15">Média (R$ 15/cm)</option>
-      <option value="25">Complexa (R$ 25/cm)</option>
-    </select>
+      <div>
+        <label>Preço por tamanho (valor por cm linear)</label>
+        <select id="precoPorCm">
+          <option value="10">R$ 10 / cm (Simples)</option>
+          <option value="15" selected>R$ 15 / cm (Média)</option>
+          <option value="25">R$ 25 / cm (Complexa)</option>
+        </select>
+      </div>
 
-    <button onclick="calcular()">Calcular Preço</button>
+      <div>
+        <label>Local do corpo (dificuldade)</label>
+        <select id="localCorpo">
+          <option value="1.00">Sem dificuldade — multiplicador 1.00</option>
+          <option value="1.10">Média dificuldade — multiplicador 1.10</option>
+          <option value="1.25">Alta dificuldade — multiplicador 1.25</option>
+        </select>
+      </div>
 
-    <div id="resultado" class="resultado" style="display:none;"></div>
+      <div>
+        <label>Nível de detalhes (taxa fixa)</label>
+        <select id="nivelDetalhes">
+          <option value="0">Baixo — R$ 0</option>
+          <option value="30">Médio — R$ 30</option>
+          <option value="60">Alto — R$ 60</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Custo fixo por materiais</label>
+        <input type="number" id="custoFixo" min="0" value="45" step="0.01">
+      </div>
+
+      <div>
+        <label>Valor do sinal (entrada)</label>
+        <input type="number" id="sinal" min="0" value="0" step="0.01">
+      </div>
+
+      <div class="full">
+        <label>Observação (opcional)</label>
+        <input id="obs" placeholder="Ex: desconto para clientes VIP, acréscimo por cor extra...">
+      </div>
+
+      <div class="full">
+        <button onclick="calcularTudo()">Calcular Orçamento</button>
+      </div>
+
+      <div class="full result" id="resultado" style="display:none">
+        <!-- resultados aparecem aqui -->
+      </div>
+    </div>
+
+    <p class="note">Como funciona (padrões escolhidos):<br>
+    • O cálculo usa média linear do tamanho: (comprimento + largura) / 2 como referência em cm — isso mantém compatibilidade com preços por cm tradicionais.<br>
+    • Preço por tamanho = custo fixo + (tamanho_equivalente × preço_por_cm).<br>
+    • Multiplica pelo fator do local do corpo e adiciona taxa fixa por nível de detalhes.<br>
+    • Você pode personalizar multiplicadores e taxas como quiser.</p>
   </div>
 
   <script>
-    function calcular() {
-      const tamanho = document.getElementById('tamanho').value;
-      const valorCm = document.getElementById('complexidade').value;
-      const custoFixo = 40;
+    function formatBR(value){
+      return Number(value).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    }
 
-      if (!tamanho || tamanho <= 0) {
-        alert('Digite um tamanho válido.');
+    function calcularTudo(){
+      const comp = parseFloat(document.getElementById('comprimento').value) || 0;
+      const larg = parseFloat(document.getElementById('largura').value) || 0;
+      const precoCm = parseFloat(document.getElementById('precoPorCm').value);
+      const multLocal = parseFloat(document.getElementById('localCorpo').value);
+      const taxaDetalhe = parseFloat(document.getElementById('nivelDetalhes').value);
+      const custoFixo = parseFloat(document.getElementById('custoFixo').value) || 0;
+      const obs = document.getElementById('obs').value;
+
+      if (comp <= 0 || larg <= 0){
+        alert('Informe comprimento e largura válidos (>0).');
         return;
       }
 
-      const preco = custoFixo + (tamanho * valorCm);
+      // tamanho equivalente (média linear) — aproxima o método por cm usado antes
+      const tamanhoEq = (comp + larg) / 2;
 
-      document.getElementById('resultado').style.display = 'block';
-      document.getElementById('resultado').innerHTML = `Preço final: <b>R$ ${preco.toFixed(2)}</b>`;
+      // preço por tamanho (antes do multiplicador)
+      const precoPorTamanho = custoFixo + (tamanhoEq * precoCm);
+
+      // preço após local do corpo
+      const precoComLocal = precoPorTamanho * multLocal;
+
+      // preço final adicionando nível de detalhes
+      const sinal = parseFloat(document.getElementById('sinal').value) || 0;
+      const precoFinal = (precoComLocal + taxaDetalhe) - sinal;
+
+      // breakdown para exibição
+      const breakdown = [];
+      breakdown.push(['Comprimento (cm)', comp]);
+      breakdown.push(['Largura (cm)', larg]);
+      breakdown.push(['Tamanho equivalente (cm)', tamanhoEq.toFixed(2)]);
+      breakdown.push(['Custo fixo (materiais)', 'R$ ' + formatBR(custoFixo)]);
+      breakdown.push(['Preço/unit (R$ por cm)', 'R$ ' + formatBR(precoCm)]);
+      breakdown.push(['Preço por tamanho (antes do multiplicador)', 'R$ ' + formatBR(precoPorTamanho)]);
+      breakdown.push(['Multiplicador local do corpo', multLocal]);
+      breakdown.push(['Preço após local do corpo', 'R$ ' + formatBR(precoComLocal)]);
+      breakdown.push(['Taxa nível de detalhes', 'R$ ' + formatBR(taxaDetalhe)]);
+      breakdown.push(['Sinal descontado', 'R$ ' + formatBR(sinal)]);
+      breakdown.push(['TOTAL (orçamento)', 'R$ ' + formatBR(precoFinal)]);
+      breakdown.push(['TOTAL (orçamento)', 'R$ ' + formatBR(precoFinal)]);
+
+      // montar HTML
+      let html = '<h3>Orçamento — Resultado</h3>';
+      html += '<div class="row"><div class="small">Resumo:</div><div class="small"><b>R$ ' + formatBR(precoFinal) + '</b></div></div>';
+      html += '<hr style="border-color:rgba(255,255,255,0.04)">';
+      html += '<div style="margin-top:8px">';
+      breakdown.forEach(function(item){
+        html += '<div class="row"><div class="small">' + item[0] + '</div><div class="small">' + item[1] + '</div></div>';
+      });
+      if (obs) html += '<div class="row" style="margin-top:8px"><div class="small">Observação</div><div class="small">' + obs + '</div></div>';
+      html += '</div>';
+
+      const resultado = document.getElementById('resultado');
+      resultado.style.display = 'block';
+      resultado.innerHTML = html;
+
+      // copiar para clipboard rápido
+      const textoResumo = 'Orçamento: R$ ' + formatBR(precoFinal) + ' — Tamanho eq: ' + tamanhoEq.toFixed(2) + ' cm';
+      // não executar clipboard sem permissão, apenas deixa visível o botão de copiar se desejar futuramente
     }
   </script>
 </body>
