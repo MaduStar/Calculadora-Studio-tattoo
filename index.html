@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Tatuagem - Studio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
+      color: #f2f2f2;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 14px;
+    }
+    select, input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #8b0000;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+      padding: 10px;
+      background: #111;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Calculadora de Tatuagem</h2>
+
+    <label for="tamanho">Tamanho (cm):</label>
+    <input type="number" id="tamanho" min="1" max="100" placeholder="Ex: 7" />
+
+    <label for="complexidade">Complexidade:</label>
+    <select id="complexidade">
+      <option value="10">Simples (R$ 10/cm)</option>
+      <option value="15">Média (R$ 15/cm)</option>
+      <option value="25">Complexa (R$ 25/cm)</option>
+    </select>
+
+    <button onclick="calcular()">Calcular Preço</button>
+
+    <div id="resultado" class="resultado" style="display:none;"></div>
+  </div>
+
+  <script>
+    function calcular() {
+      const tamanho = document.getElementById('tamanho').value;
+      const valorCm = document.getElementById('complexidade').value;
+      const custoFixo = 45;
+
+      if (!tamanho || tamanho <= 0) {
+        alert('Digite um tamanho válido.');
+        return;
+      }
+
+      const preco = custoFixo + (tamanho * valorCm);
+
+      document.getElementById('resultado').style.display = 'block';
+      document.getElementById('resultado').innerHTML = `Preço final: <b>R$ ${preco.toFixed(2)}</b>`;
+    }
+  </script>
+</body>
+</html>
