@@ -22,9 +22,8 @@
 </head>
 <body>
   <div class="container">
-    <h2>Calculadora Personalizada - Studio</h2>
-    <p class="small">Preencha comprimento e largura (em cm). A calculadora devolve preço por tamanho, ajuste por local do corpo, nível de detalhes e orçamento total.</p>
-
+    <h2>Calculadora Tattoo</h2>
+    
     <div class="grid" style="margin-top:10px">
       <div>
         <label>Comprimento (cm)</label>
@@ -38,9 +37,9 @@
       <div>
         <label>Preço por tamanho (valor por cm linear)</label>
         <select id="precoPorCm">
-          <option value="10">R$ 10 / cm (Simples- traço fino, sem sombreamento)</option>
-          <option value="15" selected>R$ 15 / cm (Média- traço + preenchimento simples)</option>
-          <option value="25">R$ 25 / cm (Complexa- sombreamento, realismo, muitos detalhes)</option>
+          <option value="10">R$ 10 / cm (Simples)</option>
+          <option value="15" selected>R$ 15 / cm (Média)</option>
+          <option value="25">R$ 25 / cm (Complexa)</option>
         </select>
       </div>
 
@@ -65,6 +64,18 @@
       <div>
         <label>Custo fixo por materiais</label>
         <input type="number" id="custoFixo" min="0" value="45" step="0.01">
+      </div>
+
+      <div>
+        <label>Parcelamento (nº de parcelas)</label>
+        <select id="parcelas">
+          <option value="1">1x (à vista)</option>
+          <option value="2">2x</option>
+          <option value="3">3x</option>
+          <option value="4">4x</option>
+          <option value="5">5x</option>
+          <option value="6">6x</option>
+        </select>
       </div>
 
       <div class="full">
@@ -113,6 +124,12 @@
       // preço final adicionando nível de detalhes
       const precoFinal = precoComLocal + taxaDetalhe;
 
+      // cálculo do sinal e parcelas
+      const sinal = precoFinal * 0.30;
+      const restante = precoFinal - sinal;
+      const parcelas = parseInt(document.getElementById('parcelas').value) || 1;
+      const valorParcela = restante / parcelas;
+
       // breakdown para exibição
       const breakdown = [];
       breakdown.push(['Comprimento (cm)', comp]);
@@ -125,6 +142,10 @@
       breakdown.push(['Preço após local do corpo', 'R$ ' + formatBR(precoComLocal)]);
       breakdown.push(['Taxa nível de detalhes', 'R$ ' + formatBR(taxaDetalhe)]);
       breakdown.push(['TOTAL (orçamento)', 'R$ ' + formatBR(precoFinal)]);
+      breakdown.push(['Sinal (30%)', 'R$ ' + formatBR(sinal)]);
+      breakdown.push(['Valor restante após sinal', 'R$ ' + formatBR(restante)]);
+      breakdown.push(['Parcelamento', parcelas + 'x']);
+      breakdown.push(['Valor por parcela', 'R$ ' + formatBR(valorParcela)]);
 
       // montar HTML
       let html = '<h3>Orçamento — Resultado</h3>';
