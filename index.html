@@ -132,7 +132,15 @@
 
       // breakdown para exibição
       const breakdown = [];
-      
+      breakdown.push(['Comprimento (cm)', comp]);
+      breakdown.push(['Largura (cm)', larg]);
+      breakdown.push(['Tamanho equivalente (cm)', tamanhoEq.toFixed(2)]);
+      breakdown.push(['Custo fixo (materiais)', 'R$ ' + formatBR(custoFixo)]);
+      breakdown.push(['Preço/unit (R$ por cm)', 'R$ ' + formatBR(precoCm)]);
+      breakdown.push(['Preço por tamanho (antes do multiplicador)', 'R$ ' + formatBR(precoPorTamanho)]);
+      breakdown.push(['Multiplicador local do corpo', multLocal]);
+      breakdown.push(['Preço após local do corpo', 'R$ ' + formatBR(precoComLocal)]);
+      breakdown.push(['Taxa nível de detalhes', 'R$ ' + formatBR(taxaDetalhe)]);
       breakdown.push(['TOTAL (orçamento)', 'R$ ' + formatBR(precoFinal)]);
       breakdown.push(['Sinal (30%)', 'R$ ' + formatBR(sinal)]);
       breakdown.push(['Valor restante após sinal', 'R$ ' + formatBR(restante)]);
